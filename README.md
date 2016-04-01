@@ -1,4 +1,4 @@
-# Self to Chef Cloudformation Templates
+# Self Bootstrap to Chef Cloudformation Templates
 
 These templates utilize a way to avoid having to use knife bootstrap and/or knife ec2 to get AWS instance built and into your chef server.
 
