@@ -19,9 +19,6 @@ export NODE_NAME=${NODENAME}-$(curl -sS http://169.254.169.254/latest/meta-data/
 
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 
-# Add chef repo
-curl -s https://packagecloud.io/install/repositories/chef/stable/script.deb.sh | bash
-
 # Install cfn bootstraping tools
 easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
 
@@ -37,17 +34,13 @@ aws configure set default.region ${REGION}
 aws configure set aws_access_key_id ${ACCESS_KEY}
 aws configure set aws_secret_access_key ${SECRET_KEY}
 
-# Add chef repo
-curl -s https://packagecloud.io/install/repositories/chef/stable/script.deb.sh | bash
-apt-get update
-
 # Do some chef pre-work
 /bin/mkdir -p /etc/chef
 /bin/mkdir -p /var/lib/chef
 /bin/mkdir -p /var/log/chef
 
-# Install Chef
-apt-get install -y chef || error_exit 'Failed to install chef'
+# install chef
+curl -L https://omnitruck.chef.io/install.sh | bash || error_exit 'could no install chef'
 
 # Get client pem
 aws s3 cp s3://${S3BUCKET}/${VALIDATOR_PEM} /etc/chef/validation.pem || error_exit 'Failed to get Validation Pem'
